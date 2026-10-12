@@ -1,0 +1,257 @@
+{
+  "files": {
+    "read": 2,
+    "skipped": 0,
+    "items": [
+      {
+        "rel_path": "package.json",
+        "language": "npm",
+        "size_bytes": 166,
+        "sha256": "ddb895a3920e5a57b75724b69d2e2bad0f3c7bd7d3f6e994320561401f51ed4c",
+        "status": "read",
+        "skip_reason": null
+      },
+      {
+        "rel_path": "server.ts",
+        "language": "typescript",
+        "size_bytes": 793,
+        "sha256": "a2ec2feb5b7a2daa3f0309910d2c5ed6eb0a3ef5429d74228689d6922bad2bfc",
+        "status": "read",
+        "skip_reason": null
+      }
+    ]
+  },
+  "rules": [
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.c.format-string",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.c.gets",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.c.sprintf",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.c.strcat",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.c.strcpy",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.c.system",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.config.env-committed",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.config.missing-csrf",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.config.missing-security-headers",
+      "scanner_version": "0.1.0",
+      "files_matched": 1
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.html.mixed-content",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.java.command-injection",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.java.deserialization",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.java.sql-concat",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.java.weak-hash",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.js.command-injection",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.js.cors-wildcard",
+      "scanner_version": "0.1.0",
+      "files_matched": 1
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.js.dom-xss",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.js.eval",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.js.sql-concat",
+      "scanner_version": "0.1.0",
+      "files_matched": 1
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.js.sql-template",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.js.tls-disabled",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.js.xss-response",
+      "scanner_version": "0.1.0",
+      "files_matched": 1
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.py.cors-wildcard",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.py.debug-mode",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.py.deserialization",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.py.eval",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.py.shell-injection",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.py.sql-concat",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.py.sql-fstring",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.py.tls-disabled",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.secret.aws-access-key",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.secret.generic-assignment",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.secret.github-token",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.secret.google-api-key",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.secret.private-key",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.secret.slack-token",
+      "scanner_version": "0.1.0",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "builtin.secret.stripe-key",
+      "scanner_version": "0.1.0",
+      "files_matched": 1
+    }
+  ],
+  "scanners": [
+    {
+      "name": "builtin",
+      "version": "0.1.0",
+      "duration_s": 0.001,
+      "findings": 5
+    }
+  ],
+  "scanners_skipped": []
+}

@@ -1,7 +1,8 @@
 """Rewrite string-built SQL into a parameterised query, for the simple shapes we can parse.
 
 Supported: ``x.query("..." + a + "...", cb)`` (JS), ``cur.execute("..." + a)`` and
-``cur.execute(f"...{a}...")`` (Python). Anything else is reported as not patchable.
+``cur.execute`` with an f-string such as ``f"...{a}..."`` (Python). Anything else is reported as
+not patchable.
 """
 
 import re

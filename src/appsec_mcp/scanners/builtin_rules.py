@@ -40,7 +40,7 @@ LINE_RULES: tuple[LineRule, ...] = (
         _re(r"(?<![\w.])eval\s*\(|\bnew\s+Function\s*\("),
         "high",
         "CWE-95",
-        "Code built from a string is executed with eval().",
+        "Code built from a string is executed with eval.",
     ),
     LineRule(
         "builtin.js.sql-concat",
@@ -119,12 +119,15 @@ LINE_RULES: tuple[LineRule, ...] = (
         _re(r"(?<![\w.])(?:eval|exec)\s*\("),
         "high",
         "CWE-95",
-        "Code built from a string is executed with eval()/exec().",
+        "Code built from a string is executed with eval or exec.",
     ),
     LineRule(
         "builtin.py.sql-fstring",
         PY_LANGS,
-        _re(r"\.(?:execute|executemany|raw)\s*\(\s*f[\"']"),
+        _re(
+            r"\.(?:execute|executemany|raw)\s*\(\s*f(?:\"[^\"]*|'[^']*)"
+            r"\{(?![A-Z_][A-Z0-9_]*\})"
+        ),
         "critical",
         "CWE-89",
         "SQL query built with an f-string.",

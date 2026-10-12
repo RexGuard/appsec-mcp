@@ -1,0 +1,183 @@
+{
+  "scans": {
+    "items": [
+      {
+        "scan_id": 1,
+        "project": "express_app",
+        "root_path": "C:/projects/express_app",
+        "started_at": "2026-10-12T10:45:07+00:00",
+        "status": "completed",
+        "score": 32,
+        "counts": {
+          "critical": 2,
+          "high": 1,
+          "medium": 2,
+          "low": 0,
+          "info": 0
+        }
+      }
+    ]
+  },
+  "findings": {
+    "total": 5,
+    "items": [
+      {
+        "id": 1,
+        "severity": "critical",
+        "title": "Hard-coded secret",
+        "rel_path": "server.ts",
+        "line_start": 5,
+        "plain_explanation": "Stripe secret key written in the source (in server.ts, line 5). Anyone who sees your code (a public repo, a leaked laptop, the browser) can use it as you, for example to charge cards or read your data.",
+        "patchable": true,
+        "status": "new",
+        "scanner": "builtin",
+        "cwe": "CWE-798"
+      },
+      {
+        "id": 3,
+        "severity": "critical",
+        "title": "SQL injection",
+        "rel_path": "server.ts",
+        "line_start": 13,
+        "plain_explanation": "SQL query built by joining strings with user input (in server.ts, line 13). An attacker can change the query to read, change or delete everything in your database.",
+        "patchable": true,
+        "status": "new",
+        "scanner": "builtin",
+        "cwe": "CWE-89"
+      },
+      {
+        "id": 4,
+        "severity": "high",
+        "title": "Cross-site scripting (XSS)",
+        "rel_path": "server.ts",
+        "line_start": 19,
+        "plain_explanation": "Request data is written straight into the HTML response (in server.ts, line 19). An attacker can run their own JavaScript in your users' browsers and steal their sessions.",
+        "patchable": false,
+        "status": "new",
+        "scanner": "builtin",
+        "cwe": "CWE-79"
+      },
+      {
+        "id": 5,
+        "severity": "medium",
+        "title": "Missing security headers",
+        "rel_path": "server.ts",
+        "line_start": 6,
+        "plain_explanation": "The express app sends no security headers (in server.ts, line 6). Browsers then allow clickjacking, content sniffing and make XSS easier to exploit.",
+        "patchable": true,
+        "status": "new",
+        "scanner": "builtin",
+        "cwe": "CWE-693"
+      },
+      {
+        "id": 2,
+        "severity": "medium",
+        "title": "CORS open to every website",
+        "rel_path": "server.ts",
+        "line_start": 9,
+        "plain_explanation": "CORS allows every website to call this API (in server.ts, line 9). Other sites can make requests to your API from your users' browsers and read the answers.",
+        "patchable": true,
+        "status": "new",
+        "scanner": "builtin",
+        "cwe": "CWE-942"
+      }
+    ]
+  },
+  "details": {
+    "1": {
+      "id": 1,
+      "title": "Hard-coded secret",
+      "severity": "critical",
+      "cwe": "CWE-798",
+      "rel_path": "server.ts",
+      "line_start": 5,
+      "scanner": "builtin",
+      "rule_id": "builtin.secret.stripe-key",
+      "what": "Stripe secret key written in the source (in server.ts, line 5). Anyone who sees your code (a public repo, a leaked laptop, the browser) can use it as you, for example to charge cards or read your data.",
+      "why_it_matters": "Anyone who sees your code (a public repo, a leaked laptop, the browser) can use it as you, for example to charge cards or read your data.",
+      "how_to_fix": "Move it to an environment variable or secrets manager, keep .env out of git, and rotate the key because it is already exposed.",
+      "snippet_redacted": "const STRIPE_KEY = \"sk_live_****abcd\";",
+      "patchable": true,
+      "references": [
+        "https://cwe.mitre.org/data/definitions/798.html",
+        "https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/"
+      ]
+    },
+    "3": {
+      "id": 3,
+      "title": "SQL injection",
+      "severity": "critical",
+      "cwe": "CWE-89",
+      "rel_path": "server.ts",
+      "line_start": 13,
+      "scanner": "builtin",
+      "rule_id": "builtin.js.sql-concat",
+      "what": "SQL query built by joining strings with user input (in server.ts, line 13). An attacker can change the query to read, change or delete everything in your database.",
+      "why_it_matters": "An attacker can change the query to read, change or delete everything in your database.",
+      "how_to_fix": "Use a parameterised query (placeholders like ? or $1) and pass user values separately.",
+      "snippet_redacted": "db.query(\"SELECT * FROM users WHERE id = '\" + req.params.id + \"'\", (err, rows) => {",
+      "patchable": true,
+      "references": [
+        "https://owasp.org/www-community/attacks/SQL_Injection",
+        "https://cwe.mitre.org/data/definitions/89.html"
+      ]
+    },
+    "4": {
+      "id": 4,
+      "title": "Cross-site scripting (XSS)",
+      "severity": "high",
+      "cwe": "CWE-79",
+      "rel_path": "server.ts",
+      "line_start": 19,
+      "scanner": "builtin",
+      "rule_id": "builtin.js.xss-response",
+      "what": "Request data is written straight into the HTML response (in server.ts, line 19). An attacker can run their own JavaScript in your users' browsers and steal their sessions.",
+      "why_it_matters": "An attacker can run their own JavaScript in your users' browsers and steal their sessions.",
+      "how_to_fix": "Escape output (use textContent, a template engine's auto-escaping, or a sanitiser like DOMPurify).",
+      "snippet_redacted": "res.send(\"<h1>Results for \" + req.query.q + \"</h1>\");",
+      "patchable": false,
+      "references": [
+        "https://owasp.org/www-community/attacks/xss/",
+        "https://cwe.mitre.org/data/definitions/79.html"
+      ]
+    },
+    "5": {
+      "id": 5,
+      "title": "Missing security headers",
+      "severity": "medium",
+      "cwe": "CWE-693",
+      "rel_path": "server.ts",
+      "line_start": 6,
+      "scanner": "builtin",
+      "rule_id": "builtin.config.missing-security-headers",
+      "what": "The express app sends no security headers (in server.ts, line 6). Browsers then allow clickjacking, content sniffing and make XSS easier to exploit.",
+      "why_it_matters": "Browsers then allow clickjacking, content sniffing and make XSS easier to exploit.",
+      "how_to_fix": "Add a header middleware such as helmet (Express) or Flask-Talisman, or use the security_headers recipe.",
+      "snippet_redacted": "const app = express();",
+      "patchable": true,
+      "references": [
+        "https://owasp.org/www-project-secure-headers/",
+        "https://cwe.mitre.org/data/definitions/693.html"
+      ]
+    },
+    "2": {
+      "id": 2,
+      "title": "CORS open to every website",
+      "severity": "medium",
+      "cwe": "CWE-942",
+      "rel_path": "server.ts",
+      "line_start": 9,
+      "scanner": "builtin",
+      "rule_id": "builtin.js.cors-wildcard",
+      "what": "CORS allows every website to call this API (in server.ts, line 9). Other sites can make requests to your API from your users' browsers and read the answers.",
+      "why_it_matters": "Other sites can make requests to your API from your users' browsers and read the answers.",
+      "how_to_fix": "Allow only your own front-end origins, for example from an ALLOWED_ORIGINS environment variable.",
+      "snippet_redacted": "app.use(cors());",
+      "patchable": true,
+      "references": [
+        "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS",
+        "https://cwe.mitre.org/data/definitions/942.html"
+      ]
+    }
+  }
+}

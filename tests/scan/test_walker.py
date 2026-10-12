@@ -95,3 +95,11 @@ def test_ten_thousand_files_walk_fast(tmp_path: Path) -> None:
     ledger = _collect(tmp_path)
     assert ledger.read_count == 10_000
     assert time.perf_counter() - started < MAX_10K_SECONDS
+
+
+def test_appsecignore_is_honoured(tmp_path: Path) -> None:
+    (tmp_path / ".appsecignore").write_text("fixtures/\n")
+    (tmp_path / "fixtures").mkdir()
+    (tmp_path / "fixtures" / "bad.py").write_text("eval(x)\n")
+    reasons = {e.rel_path: e.skip_reason for e in _collect(tmp_path).entries}
+    assert reasons["fixtures"] == "gitignored"

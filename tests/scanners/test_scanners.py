@@ -195,3 +195,13 @@ def test_bad_json_raises() -> None:
         parse_semgrep_json("not json", Path("."))
     with pytest.raises(AppSecError):
         parse_osv_json("{", Path("."))
+
+
+def test_suppression_marker_and_generic_secret_heuristic(tmp_path: Path) -> None:
+    (tmp_path / "a.py").write_text(
+        'eval(x)  # appsec-ignore: reviewed\nTOKEN_HEADER = "X-AppSec-Token"\n'
+        'cur.execute(f"SELECT {_COLUMNS} FROM t")\npassword = "hunter2hunter2"\n'
+    )
+    sources = LedgerCollector().consume(walk(tmp_path, 1024)).sources
+    findings = BuiltinScanner().run(tmp_path, sources).findings
+    assert [(f.line_start, f.cwe) for f in findings] == [(4, "CWE-798")]

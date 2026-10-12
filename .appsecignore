@@ -1,0 +1,3 @@
+# Paths appsec-mcp skips when scanning this repo (same syntax as .gitignore).
+# Tests and fixtures contain deliberately insecure code and fake secrets.
+tests/

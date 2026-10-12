@@ -44,6 +44,8 @@ DEFAULT_EXCLUDED_DIRS = frozenset(
 )
 _BINARY_SNIFF_BYTES = 8192
 _READ_WORKERS = 8
+# .appsecignore uses .gitignore syntax and only affects scanning, not git.
+_IGNORE_FILES = (".gitignore", ".appsecignore")
 
 
 @dataclass(frozen=True)
@@ -73,17 +75,20 @@ class _IgnoreRules:
         self._specs: list[tuple[str, pathspec.PathSpec]] = []
 
     def load(self, folder: Path, rel_folder: str) -> int:
-        """Load `folder/.gitignore` if present; return how many specs were pushed (0 or 1)."""
-        gitignore = folder / ".gitignore"
-        if not gitignore.is_file():
-            return 0
-        try:
-            lines = gitignore.read_text(encoding="utf-8", errors="replace").splitlines()
-        except OSError:
-            logger.warning("Could not read %s", gitignore)
-            return 0
-        self._specs.append((rel_folder, pathspec.PathSpec.from_lines("gitignore", lines)))
-        return 1
+        """Load `.gitignore` and `.appsecignore` from a folder; return how many were pushed."""
+        pushed = 0
+        for name in _IGNORE_FILES:
+            ignore_file = folder / name
+            if not ignore_file.is_file():
+                continue
+            try:
+                lines = ignore_file.read_text(encoding="utf-8", errors="replace").splitlines()
+            except OSError:
+                logger.warning("Could not read %s", ignore_file)
+                continue
+            self._specs.append((rel_folder, pathspec.PathSpec.from_lines("gitignore", lines)))
+            pushed += 1
+        return pushed
 
     def pop(self, count: int) -> None:
         """Drop the last `count` specs when leaving a folder."""

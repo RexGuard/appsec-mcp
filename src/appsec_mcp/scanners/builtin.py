@@ -16,6 +16,8 @@ from appsec_mcp.security.redact import SECRET_PATTERNS, is_placeholder
 
 _CRITICAL_SECRETS = frozenset({"secret.stripe-key", "secret.aws-access-key", "secret.private-key"})
 _CONFIG_LANGS = frozenset({"dotenv", "properties", "ini", "yaml", "toml"})
+SUPPRESS_MARKER = "appsec-ignore"
+_MIN_UNSTRUCTURED_SECRET_LEN = 24
 _QUOTED_GENERIC = re.compile(
     r"(?i)\b[\w-]*(?:secret|passw(?:or)?d|api[_-]?key|access[_-]?key|auth[_-]?token|token)"
     r"[\w-]*[\"']?\s*[:=]\s*[\"'](?P<secret>[^\"'\s]{8,})[\"']"
@@ -76,10 +78,20 @@ class BuiltinScanner:
         return AdapterResult(findings=findings, rules=rules)
 
 
+def _looks_secret(value: str) -> bool:
+    """Generic assignments only count when the value has a digit or is long.
+
+    This skips names such as header keys ("X-AppSec-Token") and enum values.
+    """
+    return any(c.isdigit() for c in value) or len(value) >= _MIN_UNSTRUCTURED_SECRET_LEN
+
+
 def _scan_lines(source: SourceFile) -> Iterator[RawFinding]:
     language = source.language
     check_secrets = PurePosixPath(source.rel_path).name not in _SKIP_SECRET_FILES
     for number, line in enumerate(source.text.splitlines(), start=1):
+        if SUPPRESS_MARKER in line:
+            continue
         if language in CODE_LANGS and not is_comment(line, language):
             yield from _line_rule_hits(source, number, line)
         if check_secrets:
@@ -111,6 +123,10 @@ def _secret_hits(source: SourceFile, number: int, line: str) -> Iterator[RawFind
             regex = _QUOTED_GENERIC
         match = regex.search(line)
         if match is None or is_placeholder(match.group("secret")):
+            continue
+        if pattern.rule_id == "secret.generic-assignment" and not _looks_secret(
+            match.group("secret")
+        ):
             continue
         severity = "critical" if pattern.rule_id in _CRITICAL_SECRETS else "high"
         yield RawFinding(

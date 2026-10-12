@@ -1,0 +1,162 @@
+{
+  "nodes": [
+    {
+      "id": 1,
+      "kind": "component",
+      "label": "(project root)",
+      "rel_path": null,
+      "meta": {
+        "project": "express_app"
+      },
+      "finding_count": 5
+    },
+    {
+      "id": 2,
+      "kind": "dependency",
+      "label": "cors@2.8.5",
+      "rel_path": "package.json",
+      "meta": {},
+      "finding_count": 0
+    },
+    {
+      "id": 3,
+      "kind": "dependency",
+      "label": "express@4.17.1",
+      "rel_path": "package.json",
+      "meta": {},
+      "finding_count": 0
+    },
+    {
+      "id": 4,
+      "kind": "dependency",
+      "label": "mysql@2.18.1",
+      "rel_path": "package.json",
+      "meta": {},
+      "finding_count": 0
+    },
+    {
+      "id": 5,
+      "kind": "entry_point",
+      "label": "server.ts",
+      "rel_path": "server.ts",
+      "meta": {
+        "reason": "starts an HTTP server"
+      },
+      "finding_count": 5
+    },
+    {
+      "id": 6,
+      "kind": "route",
+      "label": "GET /users/:id",
+      "rel_path": "server.ts",
+      "meta": {
+        "frameworks": [
+          "express"
+        ]
+      },
+      "finding_count": 5
+    },
+    {
+      "id": 7,
+      "kind": "route",
+      "label": "GET /search",
+      "rel_path": "server.ts",
+      "meta": {
+        "frameworks": [
+          "express"
+        ]
+      },
+      "finding_count": 5
+    },
+    {
+      "id": 8,
+      "kind": "route",
+      "label": "POST /charge",
+      "rel_path": "server.ts",
+      "meta": {
+        "frameworks": [
+          "express"
+        ]
+      },
+      "finding_count": 5
+    },
+    {
+      "id": 9,
+      "kind": "data_store",
+      "label": "MySQL",
+      "rel_path": null,
+      "meta": {},
+      "finding_count": 0
+    },
+    {
+      "id": 10,
+      "kind": "external_service",
+      "label": "https://api.stripe.com",
+      "rel_path": null,
+      "meta": {},
+      "finding_count": 0
+    },
+    {
+      "id": 11,
+      "kind": "secret",
+      "label": "server.ts:5",
+      "rel_path": "server.ts",
+      "meta": {
+        "title": "Hard-coded secret"
+      },
+      "finding_count": 1
+    }
+  ],
+  "edges": [
+    {
+      "source": 1,
+      "target": 2,
+      "kind": "depends_on"
+    },
+    {
+      "source": 1,
+      "target": 3,
+      "kind": "depends_on"
+    },
+    {
+      "source": 1,
+      "target": 4,
+      "kind": "depends_on"
+    },
+    {
+      "source": 1,
+      "target": 6,
+      "kind": "handles"
+    },
+    {
+      "source": 1,
+      "target": 7,
+      "kind": "handles"
+    },
+    {
+      "source": 1,
+      "target": 8,
+      "kind": "handles"
+    },
+    {
+      "source": 1,
+      "target": 9,
+      "kind": "reads"
+    },
+    {
+      "source": 1,
+      "target": 10,
+      "kind": "calls"
+    },
+    {
+      "source": 1,
+      "target": 11,
+      "kind": "reads"
+    },
+    {
+      "source": 5,
+      "target": 1,
+      "kind": "calls"
+    }
+  ]
+}
