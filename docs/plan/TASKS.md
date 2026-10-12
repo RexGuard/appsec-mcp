@@ -1,27 +1,27 @@
 # Tasks
 
 ## Phase 1: Skeleton, models and viewer with mock data
-- [ ] T1: Create the Python project skeleton with a working MCP server
+- [x] T1: Create the Python project skeleton with a working MCP server
   Goal: An installable `appsec-mcp` package (src layout) whose MCP server starts over stdio and exposes a `ping` tool. ruff and pytest are configured.
   Files: `pyproject.toml`, `src/appsec_mcp/__init__.py`, `src/appsec_mcp/server.py`, `src/appsec_mcp/cli.py`, `src/appsec_mcp/errors.py`, `tests/test_server.py`, `.gitignore`, `README.md` (stub), `LICENSE` (MIT)
   Done when: `pip install -e .[dev]` works; `appsec-mcp serve` starts without writing to stdout outside the protocol; an in-process FastMCP client test calls `ping` and gets `"pong"`; `ruff check` and `ruff format --check` pass; `pytest` is green.
 
-- [ ] T2: Define the domain models and vulnerable fixture apps
+- [x] T2: Define the domain models and vulnerable fixture apps
   Goal: Pydantic models for every MCP request and response in SPEC.md, plus five small vulnerable fixture apps, each with an `expected.json`.
   Files: `src/appsec_mcp/models/{scan.py,finding.py,system_map.py,ledger.py,patch.py,web_check.py}`, `tests/fixtures/vuln_apps/{express_app,flask_app,spring_app,cpp_cli,static_site}/**`, `tests/fixtures/vuln_apps/*/expected.json`, `tests/models/test_models.py`
   Done when: the models validate the sample payloads and reject bad severities, negative ids and unknown fields; each fixture's `expected.json` lists its planted issues (rule category, file, line); the tests pass.
 
-- [ ] T3: Scaffold the TypeScript viewer with a findings page on mock data
+- [x] T3: Scaffold the TypeScript viewer with a findings page on mock data
   Goal: A Vite + strict TypeScript + Tailwind viewer showing a scan summary (score and severity counts) and a filterable findings list loaded from `mock/scan.json`, with a detail panel showing the plain-language explanation.
   Files: `viewer/package.json`, `viewer/tsconfig.json` (strict), `viewer/vite.config.ts`, `viewer/index.html`, `viewer/src/main.ts`, `viewer/src/api/schemas.ts` (Zod), `viewer/src/views/findings.ts`, `viewer/src/mock/scan.json`, `viewer/src/api/schemas.test.ts`
   Done when: `npm run dev` shows the findings page; filtering by severity works; the Zod schemas parse the mock data; `npm test` (vitest) passes; `npm run build` emits static files.
 
-- [ ] T4: Add the system map and audit ledger views to the viewer (mock data)
+- [x] T4: Add the system map and audit ledger views to the viewer (mock data)
   Goal: A Map tab (Cytoscape graph, nodes coloured by kind, risky nodes highlighted, click a node to see its files and findings) and a Ledger tab (files read/skipped with reasons, rules applied per scanner, paginated).
   Files: `viewer/src/views/map.ts`, `viewer/src/views/ledger.ts`, `viewer/src/mock/map.json`, `viewer/src/mock/ledger.json`, `viewer/src/router.ts`, `viewer/src/views/*.test.ts`
   Done when: all three tabs render from mock data; the graph is usable with 200 or more nodes; the ledger paginates; vitest covers the data transforms; the build passes.
 
-- [ ] T5: Checkpoint: developer reviews the running UI
+- [~] T5: Checkpoint: developer reviews the running UI
   Goal: The developer runs the viewer and approves or adjusts the layout, wording and information shown before backend work starts.
   Files: `docs/ui-review.md` (notes and decisions)
   Done when: the developer has clicked through Findings, Map and Ledger; requested changes are applied or logged as issues; `docs/ui-review.md` records the decisions; the mock JSON shapes are frozen as the API contract.

@@ -1,0 +1,192 @@
+{
+  "nodes": [
+    {
+      "id": 1,
+      "kind": "entry_point",
+      "label": "server.ts (app.listen)",
+      "rel_path": "src/server.ts",
+      "meta": {
+        "framework": "express",
+        "port": 3000
+      },
+      "finding_count": 4
+    },
+    {
+      "id": 2,
+      "kind": "component",
+      "label": "config.ts",
+      "rel_path": "src/config.ts",
+      "meta": {},
+      "finding_count": 2
+    },
+    {
+      "id": 3,
+      "kind": "route",
+      "label": "GET /api/users",
+      "rel_path": "src/server.ts",
+      "meta": {
+        "line": 12,
+        "line_end": 16
+      },
+      "finding_count": 1
+    },
+    {
+      "id": 4,
+      "kind": "route",
+      "label": "GET /hello",
+      "rel_path": "src/server.ts",
+      "meta": {
+        "line": 18,
+        "line_end": 20
+      },
+      "finding_count": 1
+    },
+    {
+      "id": 5,
+      "kind": "route",
+      "label": "POST /api/orders",
+      "rel_path": "src/server.ts",
+      "meta": {
+        "line": 22,
+        "line_end": 25
+      },
+      "finding_count": 0
+    },
+    {
+      "id": 6,
+      "kind": "data_store",
+      "label": "MySQL: shop",
+      "rel_path": "src/server.ts",
+      "meta": {
+        "driver": "mysql2"
+      },
+      "finding_count": 0
+    },
+    {
+      "id": 7,
+      "kind": "secret",
+      "label": "apiSecretKey",
+      "rel_path": "src/config.ts",
+      "meta": {
+        "line": 6
+      },
+      "finding_count": 1
+    },
+    {
+      "id": 8,
+      "kind": "secret",
+      "label": "paymentsApiToken",
+      "rel_path": "src/config.ts",
+      "meta": {
+        "line": 7
+      },
+      "finding_count": 1
+    },
+    {
+      "id": 9,
+      "kind": "dependency",
+      "label": "cors@2.8.5",
+      "rel_path": "package-lock.json",
+      "meta": {
+        "ecosystem": "npm",
+        "version": "2.8.5"
+      },
+      "finding_count": 0
+    },
+    {
+      "id": 10,
+      "kind": "dependency",
+      "label": "express@4.18.2",
+      "rel_path": "package-lock.json",
+      "meta": {
+        "ecosystem": "npm",
+        "version": "4.18.2"
+      },
+      "finding_count": 0
+    },
+    {
+      "id": 11,
+      "kind": "dependency",
+      "label": "lodash@4.17.15",
+      "rel_path": "package-lock.json",
+      "meta": {
+        "ecosystem": "npm",
+        "version": "4.17.15"
+      },
+      "finding_count": 1
+    },
+    {
+      "id": 12,
+      "kind": "dependency",
+      "label": "mysql2@3.6.0",
+      "rel_path": "package-lock.json",
+      "meta": {
+        "ecosystem": "npm",
+        "version": "3.6.0"
+      },
+      "finding_count": 0
+    }
+  ],
+  "edges": [
+    {
+      "source": 1,
+      "target": 2,
+      "kind": "imports"
+    },
+    {
+      "source": 1,
+      "target": 3,
+      "kind": "handles"
+    },
+    {
+      "source": 1,
+      "target": 4,
+      "kind": "handles"
+    },
+    {
+      "source": 1,
+      "target": 5,
+      "kind": "handles"
+    },
+    {
+      "source": 3,
+      "target": 6,
+      "kind": "reads"
+    },
+    {
+      "source": 5,
+      "target": 6,
+      "kind": "reads"
+    },
+    {
+      "source": 2,
+      "target": 7,
+      "kind": "reads"
+    },
+    {
+      "source": 2,
+      "target": 8,
+      "kind": "reads"
+    },
+    {
+      "source": 1,
+      "target": 9,
+      "kind": "depends_on"
+    },
+    {
+      "source": 1,
+      "target": 10,
+      "kind": "depends_on"
+    },
+    {
+      "source": 1,
+      "target": 11,
+      "kind": "depends_on"
+    },
+    {
+      "source": 1,
+      "target": 12,
+      "kind": "depends_on"
+    }
+  ]
+}

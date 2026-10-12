@@ -1,0 +1,222 @@
+{
+  "summary": {
+    "scan_id": 12,
+    "project": "express_app",
+    "started_at": "2026-10-12T09:40:12Z",
+    "status": "partial",
+    "score": 38,
+    "counts": {
+      "critical": 1,
+      "high": 4,
+      "medium": 1,
+      "low": 1,
+      "info": 1
+    },
+    "new": 5,
+    "fixed": 2,
+    "scanners_run": [
+      "builtin",
+      "gitleaks",
+      "osv"
+    ],
+    "scanners_skipped": [
+      {
+        "name": "semgrep",
+        "reason": "Semgrep is not installed on this computer.",
+        "install_hint": "pipx install semgrep (on Windows, install it inside WSL)"
+      }
+    ],
+    "files_read": 5,
+    "files_skipped": 3,
+    "duration_s": 6.4
+  },
+  "findings": {
+    "total": 8,
+    "items": [
+      {
+        "id": 1,
+        "severity": "critical",
+        "title": "SQL injection in the users search",
+        "rel_path": "src/server.ts",
+        "line_start": 14,
+        "plain_explanation": "Whatever someone types in the ?name= box is pasted straight into a database query. An attacker can type SQL instead of a name and read or delete your whole users table.",
+        "patchable": true,
+        "status": "new"
+      },
+      {
+        "id": 2,
+        "severity": "high",
+        "title": "Hard-coded API secret",
+        "rel_path": "src/config.ts",
+        "line_start": 6,
+        "plain_explanation": "Your API secret key is written directly in config.ts. Anyone who can see your code, including on GitHub, can use it as if they were you.",
+        "patchable": true,
+        "status": "new"
+      },
+      {
+        "id": 3,
+        "severity": "high",
+        "title": "Hard-coded payments token",
+        "rel_path": "src/config.ts",
+        "line_start": 7,
+        "plain_explanation": "A payments API token is stored in the source code. Someone who copies it could make payment requests on your account.",
+        "patchable": true,
+        "status": "new"
+      },
+      {
+        "id": 4,
+        "severity": "high",
+        "title": "Cross-site scripting on /hello",
+        "rel_path": "src/server.ts",
+        "line_start": 19,
+        "plain_explanation": "The /hello page shows the name from the URL as HTML. A link with a script in it would run that script in your visitor's browser.",
+        "patchable": false,
+        "status": "new"
+      },
+      {
+        "id": 5,
+        "severity": "high",
+        "title": "lodash 4.17.15 has a known vulnerability",
+        "rel_path": "package-lock.json",
+        "line_start": 19,
+        "plain_explanation": "Your app uses lodash 4.17.15, which has a published security bug (prototype pollution, CVE-2020-8203). Updating fixes it.",
+        "patchable": false,
+        "status": "existing"
+      },
+      {
+        "id": 6,
+        "severity": "medium",
+        "title": "CORS allows every website",
+        "rel_path": "src/server.ts",
+        "line_start": 8,
+        "plain_explanation": "Your API tells browsers that any website may call it. A malicious site could make requests to your API from your users' browsers.",
+        "patchable": true,
+        "status": "existing"
+      },
+      {
+        "id": 7,
+        "severity": "low",
+        "title": "No security headers",
+        "rel_path": "src/server.ts",
+        "line_start": 6,
+        "plain_explanation": "Your server doesn't send the standard security headers that tell browsers to block common attacks such as clickjacking.",
+        "patchable": true,
+        "status": "existing"
+      },
+      {
+        "id": 8,
+        "severity": "info",
+        "title": "Server listens on a fixed port",
+        "rel_path": "src/server.ts",
+        "line_start": 27,
+        "plain_explanation": "The port number is fixed in code. That's fine for development; most hosts expect it to come from the PORT environment variable.",
+        "patchable": false,
+        "status": "new"
+      }
+    ]
+  },
+  "details": [
+    {
+      "id": 1,
+      "title": "SQL injection in the users search",
+      "severity": "critical",
+      "cwe": "CWE-89",
+      "what": "The /api/users route builds its SQL by inserting the name parameter into the query text.",
+      "why_it_matters": "Anyone on the internet can change what the query does, for example dump every user's email and password hash.",
+      "how_to_fix": "Pass the value as a parameter instead: pool.query(\"SELECT * FROM users WHERE name = ?\", [name]). The database then treats it as data, never as SQL.",
+      "snippet_redacted": "const [rows] = await pool.query(`SELECT * FROM users WHERE name = '${name}'`);",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/89.html"
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Hard-coded API secret",
+      "severity": "high",
+      "cwe": "CWE-798",
+      "what": "config.ts contains an API secret as a plain string.",
+      "why_it_matters": "Secrets in code end up in git history, screenshots and shared repos. Leaked keys are found and abused within minutes.",
+      "how_to_fix": "Move it to an environment variable (process.env.API_SECRET_KEY), put the value in a .env file that is listed in .gitignore, and rotate the old key.",
+      "snippet_redacted": "apiSecretKey: \"a8f3****f9e8\",",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/798.html"
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Hard-coded payments token",
+      "severity": "high",
+      "cwe": "CWE-798",
+      "what": "config.ts contains a payments API token as a plain string.",
+      "why_it_matters": "Payment credentials are a direct path to money. They must never be in code.",
+      "how_to_fix": "Load it from process.env.PAYMENTS_API_TOKEN, keep the value in .env (gitignored), and rotate this token with your provider.",
+      "snippet_redacted": "paymentsApiToken: \"pk_9d****1d0c\",",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/798.html"
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Cross-site scripting on /hello",
+      "severity": "high",
+      "cwe": "CWE-79",
+      "what": "The name query parameter is inserted into an HTML response without escaping.",
+      "why_it_matters": "An attacker can send your users a link that steals their session or acts on their behalf.",
+      "how_to_fix": "Escape the value before putting it into HTML, or send it as text: res.type('text/plain'). A template engine with auto-escaping also fixes it.",
+      "snippet_redacted": "res.send(`<h1>Hello ${req.query.name}</h1>`);",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/79.html"
+      ]
+    },
+    {
+      "id": 5,
+      "title": "lodash 4.17.15 has a known vulnerability",
+      "severity": "high",
+      "cwe": "CWE-1321",
+      "what": "A dependency version in package-lock.json has a known security advisory.",
+      "why_it_matters": "Attackers scan for apps with known-vulnerable libraries because the exploit is already public.",
+      "how_to_fix": "Run npm install lodash@latest (4.17.21 or newer), then commit the updated package-lock.json.",
+      "snippet_redacted": "\"node_modules/lodash\": { \"version\": \"4.17.15\" }",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/1321.html"
+      ]
+    },
+    {
+      "id": 6,
+      "title": "CORS allows every website",
+      "severity": "medium",
+      "cwe": "CWE-942",
+      "what": "cors() is configured with origin: \"*\".",
+      "why_it_matters": "Other sites can read your API's responses through a visitor's browser.",
+      "how_to_fix": "List only your own front-end address: cors({ origin: [\"https://yourapp.com\"] }).",
+      "snippet_redacted": "app.use(cors({ origin: \"*\" }));",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/942.html"
+      ]
+    },
+    {
+      "id": 7,
+      "title": "No security headers",
+      "severity": "low",
+      "cwe": "CWE-693",
+      "what": "The Express app doesn't use helmet or set headers like Content-Security-Policy and X-Frame-Options.",
+      "why_it_matters": "These headers are a cheap extra layer that stops whole classes of browser attacks.",
+      "how_to_fix": "npm install helmet, then add app.use(helmet()) right after creating the app.",
+      "snippet_redacted": "const app = express();",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/693.html"
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Server listens on a fixed port",
+      "severity": "info",
+      "cwe": null,
+      "what": "app.listen uses config.port, which is hard-coded to 3000.",
+      "why_it_matters": "Not a vulnerability. It only affects how easily you can deploy.",
+      "how_to_fix": "Use Number(process.env.PORT) || 3000.",
+      "snippet_redacted": "app.listen(config.port, ...)",
+      "references": []
+    }
+  ]
+}

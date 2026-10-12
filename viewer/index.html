@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'" />
+    <title>AppSec MCP</title>
+  </head>
+  <body class="min-h-screen bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100">
+    <header class="border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+      <div class="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
+        <div class="flex items-center gap-2">
+          <span aria-hidden="true" class="grid h-8 w-8 place-items-center rounded-lg bg-emerald-600 text-sm font-bold text-white">A</span>
+          <div>
+            <div class="text-sm font-semibold leading-tight">AppSec MCP</div>
+            <div id="project-name" class="text-xs leading-tight text-slate-500 dark:text-slate-400"></div>
+          </div>
+        </div>
+        <nav id="tabs" aria-label="Views" class="flex gap-1 text-sm"></nav>
+        <div id="data-badge" class="ml-auto rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-900/40 dark:text-amber-300"></div>
+      </div>
+    </header>
+    <main id="app" class="mx-auto max-w-7xl px-4 py-6"></main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+/* Dark mode follows the OS unless the page sets data-theme="light" / "dark" on <html>. */
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]) *) {
+      @slot;
+    }
+  }
+  &:where([data-theme="dark"] *) {
+    @slot;
+  }
+}
+
+#graph {
+  touch-action: none;
+}

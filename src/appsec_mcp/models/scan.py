@@ -70,3 +70,10 @@ class ScanListItem(StrictModel):
 
 class ListScansResponse(StrictModel):
     items: list[ScanListItem]
+
+
+class ScanSummary(ScanProjectResponse):
+    """One scan as the viewer's HTTP API serves it (`GET /api/scans/{id}`)."""
+
+    project: str = Field(min_length=1)
+    started_at: str

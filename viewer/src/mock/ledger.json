@@ -1,0 +1,126 @@
+{
+  "files": {
+    "read": 5,
+    "skipped": 3,
+    "items": [
+      {
+        "rel_path": "package.json",
+        "language": "json",
+        "size_bytes": 223,
+        "sha256": "1c3da9db2700e5ca058cc710631196b008cfb9c6e0869977968b73457f64adf5",
+        "status": "read",
+        "skip_reason": null
+      },
+      {
+        "rel_path": "package-lock.json",
+        "language": "json",
+        "size_bytes": 549,
+        "sha256": "2e99011d64240179b846d22fffffa19d5937da143875225aa414f04f5ff071aa",
+        "status": "read",
+        "skip_reason": null
+      },
+      {
+        "rel_path": "src/config.ts",
+        "language": "typescript",
+        "size_bytes": 238,
+        "sha256": "19ac41752c727bb87080e5cf0d468f93f6c5c82b7026b6c257da101f66ed5f49",
+        "status": "read",
+        "skip_reason": null
+      },
+      {
+        "rel_path": "src/server.ts",
+        "language": "typescript",
+        "size_bytes": 835,
+        "sha256": "69e0611506fc0faf0382e4ea618fdfa8eeb201adb3653831cb4f7acb843dbf1e",
+        "status": "read",
+        "skip_reason": null
+      },
+      {
+        "rel_path": "expected.json",
+        "language": "json",
+        "size_bytes": 2244,
+        "sha256": "ff25d5407b8bacd45c1a8850b4490e40748162859b35bbc4171a0545ee0b91ae",
+        "status": "read",
+        "skip_reason": null
+      },
+      {
+        "rel_path": "node_modules/",
+        "language": null,
+        "size_bytes": null,
+        "sha256": null,
+        "status": "skipped",
+        "skip_reason": "excluded_dir"
+      },
+      {
+        "rel_path": "dist/",
+        "language": null,
+        "size_bytes": null,
+        "sha256": null,
+        "status": "skipped",
+        "skip_reason": "gitignored"
+      },
+      {
+        "rel_path": "public/logo.png",
+        "language": null,
+        "size_bytes": 48213,
+        "sha256": null,
+        "status": "skipped",
+        "skip_reason": "binary"
+      }
+    ]
+  },
+  "rules": [
+    {
+      "scanner": "builtin",
+      "rule_id": "cors-wildcard",
+      "files_matched": 1
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "missing-security-headers",
+      "files_matched": 1
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "debug-mode",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "env-file-committed",
+      "files_matched": 0
+    },
+    {
+      "scanner": "builtin",
+      "rule_id": "mixed-content",
+      "files_matched": 0
+    },
+    {
+      "scanner": "gitleaks",
+      "rule_id": "generic-api-key",
+      "files_matched": 1
+    },
+    {
+      "scanner": "osv",
+      "rule_id": "GHSA-p6mc-m468-83gw",
+      "files_matched": 1
+    }
+  ],
+  "scanners": [
+    {
+      "name": "builtin",
+      "version": "0.1.0",
+      "duration_s": 0.2
+    },
+    {
+      "name": "gitleaks",
+      "version": "8.21.2",
+      "duration_s": 1.9
+    },
+    {
+      "name": "osv",
+      "version": "2.0.1",
+      "duration_s": 4.1
+    }
+  ]
+}
