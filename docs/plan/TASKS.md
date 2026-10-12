@@ -32,7 +32,7 @@
   Files: `src/appsec_mcp/storage/{db.py,migrations.py,project_repo.py,scan_repo.py,finding_repo.py,map_repo.py,patch_repo.py}`, `tests/storage/test_*.py`
   Done when: migrations are idempotent; CRUD works for every repository against a tmp-path DB; all SQL is parameterised (verified with a grep-based test); the indexes exist.
 
-- [ ] T7: Build the file walker and audit ledger
+- [x] T7: Build the file walker and audit ledger
   Goal: A lazy (generator) walker that confines itself to the root, honours `.gitignore` and default excludes, detects language and binary files, applies the size cap, handles symlinks, and records every file as read or skipped with a reason.
   Files: `src/appsec_mcp/scan/walker.py`, `src/appsec_mcp/scan/language.py`, `src/appsec_mcp/scan/ledger.py`, `src/appsec_mcp/security/paths.py`, `tests/scan/test_walker.py`, `tests/security/test_paths.py`
   Done when: on the fixtures, the ledger accounts for 100% of files; a symlink escaping the root is skipped as `symlink_outside_root`; forbidden roots raise `PATH_FORBIDDEN`; a 10k-file synthetic tree walks in under 5 s.

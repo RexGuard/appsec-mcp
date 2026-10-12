@@ -20,6 +20,7 @@ classifiers = [
 dependencies = [
     "mcp>=2.3,<3",
     "pydantic>=2.7,<3",
+    "pathspec>=0.12",
 ]
 
 [project.optional-dependencies]
