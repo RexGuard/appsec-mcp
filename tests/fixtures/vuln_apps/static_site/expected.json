@@ -1,0 +1,50 @@
+{
+  "app": "static_site",
+  "language": "html",
+  "planted": [
+    {
+      "id": "ST1",
+      "category": "hardcoded_secret",
+      "scanner": "gitleaks",
+      "severity": "medium",
+      "cwe": "CWE-798",
+      "file": "index.html",
+      "line": 13,
+      "contains": "MAPS_API_KEY =",
+      "description": "An API key is visible to every visitor in the page source."
+    },
+    {
+      "id": "ST2",
+      "category": "mixed_content",
+      "scanner": "builtin",
+      "severity": "medium",
+      "cwe": "CWE-319",
+      "file": "index.html",
+      "line": 6,
+      "contains": "src=\"http://cdn.example.com/analytics.js\"",
+      "description": "A script is loaded over plain HTTP."
+    },
+    {
+      "id": "ST3",
+      "category": "mixed_content",
+      "scanner": "builtin",
+      "severity": "low",
+      "cwe": "CWE-319",
+      "file": "index.html",
+      "line": 17,
+      "contains": "src=\"http://images.example.com/banner.png\"",
+      "description": "An image is loaded over plain HTTP."
+    },
+    {
+      "id": "ST4",
+      "category": "dom_xss",
+      "scanner": "semgrep",
+      "severity": "high",
+      "cwe": "CWE-79",
+      "file": "index.html",
+      "line": 15,
+      "contains": "innerHTML = location.hash",
+      "description": "URL text is written into the page as HTML."
+    }
+  ]
+}

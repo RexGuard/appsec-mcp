@@ -1,0 +1,50 @@
+{
+  "app": "cpp_cli",
+  "language": "cpp",
+  "planted": [
+    {
+      "id": "CP1",
+      "category": "buffer_overflow",
+      "scanner": "semgrep",
+      "severity": "critical",
+      "cwe": "CWE-242",
+      "file": "main.cpp",
+      "line": 9,
+      "contains": "gets(name)",
+      "description": "gets() reads unlimited input into a fixed buffer."
+    },
+    {
+      "id": "CP2",
+      "category": "buffer_overflow",
+      "scanner": "semgrep",
+      "severity": "high",
+      "cwe": "CWE-120",
+      "file": "main.cpp",
+      "line": 12,
+      "contains": "strcpy(name, argv[1])",
+      "description": "strcpy() copies a command-line argument into a 32-byte buffer."
+    },
+    {
+      "id": "CP3",
+      "category": "buffer_overflow",
+      "scanner": "semgrep",
+      "severity": "medium",
+      "cwe": "CWE-120",
+      "file": "main.cpp",
+      "line": 15,
+      "contains": "sprintf(greeting",
+      "description": "sprintf() can overflow the greeting buffer."
+    },
+    {
+      "id": "CP4",
+      "category": "format_string",
+      "scanner": "semgrep",
+      "severity": "high",
+      "cwe": "CWE-134",
+      "file": "main.cpp",
+      "line": 16,
+      "contains": "printf(greeting)",
+      "description": "User-controlled text is used as a printf format string."
+    }
+  ]
+}

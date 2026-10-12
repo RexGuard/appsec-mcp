@@ -1,0 +1,83 @@
+{
+  "app": "express_app",
+  "language": "typescript",
+  "planted": [
+    {
+      "id": "EX1",
+      "category": "sql_injection",
+      "scanner": "semgrep",
+      "severity": "critical",
+      "cwe": "CWE-89",
+      "file": "src/server.ts",
+      "line": 14,
+      "contains": "SELECT * FROM users WHERE name = '${name}'",
+      "description": "User input is pasted into a SQL query."
+    },
+    {
+      "id": "EX2",
+      "category": "xss",
+      "scanner": "semgrep",
+      "severity": "high",
+      "cwe": "CWE-79",
+      "file": "src/server.ts",
+      "line": 19,
+      "contains": "Hello ${req.query.name}",
+      "description": "A query parameter is echoed into HTML without escaping."
+    },
+    {
+      "id": "EX3",
+      "category": "hardcoded_secret",
+      "scanner": "gitleaks",
+      "severity": "high",
+      "cwe": "CWE-798",
+      "file": "src/config.ts",
+      "line": 6,
+      "contains": "apiSecretKey:",
+      "description": "An API secret is written into the source code."
+    },
+    {
+      "id": "EX4",
+      "category": "hardcoded_secret",
+      "scanner": "gitleaks",
+      "severity": "high",
+      "cwe": "CWE-798",
+      "file": "src/config.ts",
+      "line": 7,
+      "contains": "paymentsApiToken:",
+      "description": "A payments API token is written into the source code."
+    },
+    {
+      "id": "EX5",
+      "category": "cors_wildcard",
+      "scanner": "builtin",
+      "severity": "medium",
+      "cwe": "CWE-942",
+      "file": "src/server.ts",
+      "line": 8,
+      "contains": "origin: \"*\"",
+      "description": "Any website may call this API from a browser."
+    },
+    {
+      "id": "EX6",
+      "category": "missing_security_headers",
+      "scanner": "builtin",
+      "severity": "low",
+      "cwe": "CWE-693",
+      "file": "src/server.ts",
+      "line": 6,
+      "contains": "express()",
+      "description": "No security-header middleware (helmet) is used."
+    },
+    {
+      "id": "EX7",
+      "category": "vulnerable_dependency",
+      "scanner": "osv",
+      "severity": "high",
+      "cwe": "CWE-1321",
+      "file": "package-lock.json",
+      "line": 19,
+      "contains": "lodash",
+      "description": "lodash 4.17.15 has known prototype-pollution bugs (CVE-2020-8203)."
+    }
+  ]
+}

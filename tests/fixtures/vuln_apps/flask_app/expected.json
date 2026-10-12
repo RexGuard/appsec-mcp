@@ -1,0 +1,83 @@
+{
+  "app": "flask_app",
+  "language": "python",
+  "planted": [
+    {
+      "id": "FL1",
+      "category": "debug_mode",
+      "scanner": "builtin",
+      "severity": "high",
+      "cwe": "CWE-489",
+      "file": "app.py",
+      "line": 37,
+      "contains": "debug=True",
+      "description": "The Flask debugger is on, which lets visitors run code."
+    },
+    {
+      "id": "FL2",
+      "category": "code_injection",
+      "scanner": "semgrep",
+      "severity": "critical",
+      "cwe": "CWE-95",
+      "file": "app.py",
+      "line": 18,
+      "contains": "eval(expression)",
+      "description": "A URL parameter is executed as Python code."
+    },
+    {
+      "id": "FL3",
+      "category": "missing_csrf",
+      "scanner": "builtin",
+      "severity": "medium",
+      "cwe": "CWE-352",
+      "file": "app.py",
+      "line": 21,
+      "contains": "methods=[\"POST\"]",
+      "description": "A form POST has no CSRF protection."
+    },
+    {
+      "id": "FL4",
+      "category": "hardcoded_secret",
+      "scanner": "builtin",
+      "severity": "medium",
+      "cwe": "CWE-798",
+      "file": "app.py",
+      "line": 7,
+      "contains": "app.config[\"SECRET_KEY\"] = \"dev\"",
+      "description": "The session-signing key is a fixed weak value."
+    },
+    {
+      "id": "FL5",
+      "category": "env_committed",
+      "scanner": "builtin",
+      "severity": "high",
+      "cwe": "CWE-538",
+      "file": ".env",
+      "line": 1,
+      "contains": "FLASK_SECRET_KEY=",
+      "description": "A .env file with secrets is part of the project."
+    },
+    {
+      "id": "FL6",
+      "category": "hardcoded_secret",
+      "scanner": "gitleaks",
+      "severity": "high",
+      "cwe": "CWE-798",
+      "file": ".env",
+      "line": 2,
+      "contains": "DATABASE_URL=postgres://admin:",
+      "description": "A database password is stored in plain text."
+    },
+    {
+      "id": "FL7",
+      "category": "vulnerable_dependency",
+      "scanner": "osv",
+      "severity": "high",
+      "cwe": "CWE-1035",
+      "file": "requirements.txt",
+      "line": 2,
+      "contains": "jinja2==2.10",
+      "description": "jinja2 2.10 has a known sandbox escape (CVE-2019-10906)."
+    }
+  ]
+}

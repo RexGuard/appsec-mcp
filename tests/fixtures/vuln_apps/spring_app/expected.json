@@ -1,0 +1,39 @@
+{
+  "app": "spring_app",
+  "language": "java",
+  "planted": [
+    {
+      "id": "SP1",
+      "category": "sql_injection",
+      "scanner": "semgrep",
+      "severity": "critical",
+      "cwe": "CWE-89",
+      "file": "src/main/java/com/example/demo/UserController.java",
+      "line": 23,
+      "contains": "\"SELECT * FROM users WHERE name = '\" + name",
+      "description": "User input is concatenated into a SQL query."
+    },
+    {
+      "id": "SP2",
+      "category": "insecure_deserialization",
+      "scanner": "semgrep",
+      "severity": "critical",
+      "cwe": "CWE-502",
+      "file": "src/main/java/com/example/demo/UserController.java",
+      "line": 31,
+      "contains": "in.readObject()",
+      "description": "Untrusted bytes are deserialised into Java objects."
+    },
+    {
+      "id": "SP3",
+      "category": "vulnerable_dependency",
+      "scanner": "osv",
+      "severity": "critical",
+      "cwe": "CWE-917",
+      "file": "pom.xml",
+      "line": 16,
+      "contains": "2.14.1",
+      "description": "log4j-core 2.14.1 is vulnerable to Log4Shell (CVE-2021-44228)."
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My Portfolio</title>
+    <script src="http://cdn.example.com/analytics.js"></script>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <h1>Welcome</h1>
+    <div id="map"></div>
+    <script>
+      const MAPS_API_KEY = "c4f8e2a9b1d7e3f5a0c6b8d2e4f6a8c0b2d4e6f8";
+      fetch("https://maps.example.com/v1/tiles?key=" + MAPS_API_KEY);
+      document.getElementById("map").innerHTML = location.hash.slice(1);
+    </script>
+    <img src="http://images.example.com/banner.png" alt="banner">
+  </body>
+</html>
