@@ -1,0 +1,10 @@
+{
+  "fixture": "static_site",
+  "issues": [
+    {"category": "config", "cwe": "CWE-319", "file": "index.html", "line": 6, "note": "script over plain http"},
+    {"category": "secret", "cwe": "CWE-798", "file": "index.html", "line": 12},
+    {"category": "code", "cwe": "CWE-79", "file": "index.html", "line": 14}
+  ],
+  "routes": [],
+  "entry_points": ["index.html"]
+}

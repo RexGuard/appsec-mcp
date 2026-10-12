@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Demo shop</title>
+  <script src="http://cdn.example.com/analytics.js"></script>
+</head>
+<body>
+  <h1>Demo shop</h1>
+  <div id="out"></div>
+  <script>
+    const MAPS_API_KEY = "AIzaSyFAKEfakeFAKEfakeFAKEfakeFAKEfake12";
+    const params = new URLSearchParams(location.search);
+    document.getElementById("out").innerHTML = params.get("msg");
+  </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "fixture": "cpp_cli",
+  "issues": [
+    {"category": "code", "cwe": "CWE-120", "file": "main.cpp", "line": 8},
+    {"category": "code", "cwe": "CWE-242", "file": "main.cpp", "line": 10},
+    {"category": "code", "cwe": "CWE-134", "file": "main.cpp", "line": 11}
+  ],
+  "routes": [],
+  "entry_points": ["main.cpp"]
+}

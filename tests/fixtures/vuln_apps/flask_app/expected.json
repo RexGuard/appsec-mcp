@@ -1,0 +1,14 @@
+{
+  "fixture": "flask_app",
+  "issues": [
+    {"category": "secret", "cwe": "CWE-798", "file": ".env", "line": 1},
+    {"category": "config", "cwe": "CWE-538", "file": ".env", "line": 1, "note": ".env committed"},
+    {"category": "config", "cwe": "CWE-352", "file": "app.py", "line": 5, "note": "form POST without CSRF protection"},
+    {"category": "code", "cwe": "CWE-95", "file": "app.py", "line": 15},
+    {"category": "code", "cwe": "CWE-89", "file": "app.py", "line": 31},
+    {"category": "config", "cwe": "CWE-489", "file": "app.py", "line": 36},
+    {"category": "dependency", "cwe": null, "file": "requirements.txt", "line": null, "requires": "osv"}
+  ],
+  "routes": ["GET /calc", "POST /comment", "GET /user"],
+  "entry_points": ["app.py"]
+}

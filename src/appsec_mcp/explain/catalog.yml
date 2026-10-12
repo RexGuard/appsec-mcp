@@ -1,0 +1,116 @@
+# Plain-language explanations, keyed by CWE. Keep each `why` to one or two short sentences.
+# `title` names the problem; `what` explains it; `why` is the consequence; `fix` is the next step.
+CWE-89:
+  title: SQL injection
+  what: The database query is glued together from text that a visitor can control.
+  why: An attacker can change the query to read, change or delete everything in your database.
+  fix: Use a parameterised query (placeholders like ? or $1) and pass user values separately.
+  references: [https://owasp.org/www-community/attacks/SQL_Injection, https://cwe.mitre.org/data/definitions/89.html]
+CWE-79:
+  title: Cross-site scripting (XSS)
+  what: Text from a visitor is put into a web page as HTML without being escaped.
+  why: An attacker can run their own JavaScript in your users' browsers and steal their sessions.
+  fix: Escape output (use textContent, a template engine's auto-escaping, or a sanitiser like DOMPurify).
+  references: [https://owasp.org/www-community/attacks/xss/, https://cwe.mitre.org/data/definitions/79.html]
+CWE-95:
+  title: Code injection through eval
+  what: The program runs a piece of text as code.
+  why: If that text comes from a visitor, they can run any code on your server or in the browser.
+  fix: Remove eval/exec. Parse the input safely instead (for maths, use a small parser or ast.literal_eval).
+  references: [https://cwe.mitre.org/data/definitions/95.html]
+CWE-798:
+  title: Hard-coded secret
+  what: A password, API key or token is written directly in the code.
+  why: Anyone who sees your code (a public repo, a leaked laptop, the browser) can use it as you, for example to charge cards or read your data.
+  fix: Move it to an environment variable or secrets manager, keep .env out of git, and rotate the key because it is already exposed.
+  references: [https://cwe.mitre.org/data/definitions/798.html, https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/]
+CWE-942:
+  title: CORS open to every website
+  what: Your API tells browsers that any website may call it.
+  why: Other sites can make requests to your API from your users' browsers and read the answers.
+  fix: Allow only your own front-end origins, for example from an ALLOWED_ORIGINS environment variable.
+  references: [https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS, https://cwe.mitre.org/data/definitions/942.html]
+CWE-78:
+  title: Command injection
+  what: A system command is built from variables and run through the shell.
+  why: If any part comes from a visitor, they can run their own commands on your server.
+  fix: Pass arguments as a list without a shell, and never build commands from user input.
+  references: [https://cwe.mitre.org/data/definitions/78.html]
+CWE-295:
+  title: TLS certificate checks turned off
+  what: The program accepts any HTTPS certificate, even a fake one.
+  why: Someone on the network can read or change the traffic without being noticed.
+  fix: Remove the setting that disables verification; fix the certificate problem instead.
+  references: [https://cwe.mitre.org/data/definitions/295.html]
+CWE-489:
+  title: Debug mode left on
+  what: The app runs in debug mode.
+  why: Debug pages show your code and settings, and Flask's debugger lets visitors run code on your server.
+  fix: Turn debug off in anything reachable from the internet; enable it only through a local environment variable.
+  references: [https://flask.palletsprojects.com/en/latest/debugging/, https://cwe.mitre.org/data/definitions/489.html]
+CWE-502:
+  title: Unsafe deserialisation
+  what: The program turns untrusted bytes back into objects with a loader that can run code.
+  why: A crafted payload can run code on your server.
+  fix: Use a data-only format such as JSON, or a safe loader (yaml.safe_load), and never deserialise untrusted input.
+  references: [https://cwe.mitre.org/data/definitions/502.html]
+CWE-120:
+  title: Buffer overflow
+  what: Data is copied into a fixed-size buffer without checking that it fits.
+  why: Long input overwrites nearby memory, which can crash the program or let an attacker take control.
+  fix: Use size-checked functions (snprintf, strncpy with explicit termination) or std::string.
+  references: [https://cwe.mitre.org/data/definitions/120.html]
+CWE-242:
+  title: Dangerous function gets()
+  what: gets() reads a line with no limit on its length.
+  why: Any input longer than the buffer overflows it; this is a classic way to take over a program.
+  fix: Use fgets(buf, sizeof buf, stdin) or std::getline.
+  references: [https://cwe.mitre.org/data/definitions/242.html]
+CWE-134:
+  title: Format string vulnerability
+  what: A variable is passed to printf as the format itself.
+  why: Input containing %s or %n can leak memory or write to it.
+  fix: Always use a fixed format, for example printf("%s", line).
+  references: [https://cwe.mitre.org/data/definitions/134.html]
+CWE-328:
+  title: Weak hash
+  what: MD5 or SHA-1 is used.
+  why: These hashes can be forged or cracked quickly, so they do not protect passwords or integrity.
+  fix: Use SHA-256 for integrity, and bcrypt, scrypt or Argon2 for passwords.
+  references: [https://cwe.mitre.org/data/definitions/328.html]
+CWE-319:
+  title: Content loaded over plain HTTP
+  what: The page loads a script or resource over http instead of https.
+  why: Anyone on the network can swap that file for a malicious one.
+  fix: Load it over https, ideally with a Subresource Integrity (integrity=) attribute.
+  references: [https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content, https://cwe.mitre.org/data/definitions/319.html]
+CWE-538:
+  title: .env file will be committed
+  what: A .env file with settings or secrets is not listed in .gitignore.
+  why: Pushing it publishes every secret inside it.
+  fix: Add .env to .gitignore, run `git rm --cached .env`, and rotate any secrets it contained.
+  references: [https://cwe.mitre.org/data/definitions/538.html]
+CWE-693:
+  title: Missing security headers
+  what: The web app does not send standard protective headers (CSP, X-Content-Type-Options, frame protection).
+  why: Browsers then allow clickjacking, content sniffing and make XSS easier to exploit.
+  fix: Add a header middleware such as helmet (Express) or Flask-Talisman, or use the security_headers recipe.
+  references: [https://owasp.org/www-project-secure-headers/, https://cwe.mitre.org/data/definitions/693.html]
+CWE-352:
+  title: Missing CSRF protection
+  what: Forms change data without checking that the request came from your own site.
+  why: Another website can make your logged-in users submit actions they never intended.
+  fix: Add CSRF tokens (Flask-WTF CSRFProtect, or an origin check for APIs), or use the csrf recipe.
+  references: [https://owasp.org/www-community/attacks/csrf, https://cwe.mitre.org/data/definitions/352.html]
+CWE-1395:
+  title: Vulnerable dependency
+  what: A library your project uses has a publicly known security problem in this version.
+  why: Attackers look for apps running known-vulnerable versions because the exploit is already documented.
+  fix: Upgrade the package to a fixed version and re-run the scan.
+  references: [https://osv.dev/]
+default:
+  title: Security issue
+  what: A scanner flagged a pattern that is often unsafe.
+  why: Depending on how the code is used, it may let an attacker read data or run code.
+  fix: Review the line and follow the scanner's recommendation.
+  references: [https://owasp.org/www-project-top-ten/]

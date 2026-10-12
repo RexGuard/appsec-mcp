@@ -1,0 +1,9 @@
+{
+  "fixture": "spring_app",
+  "issues": [
+    {"category": "code", "cwe": "CWE-89", "file": "src/main/java/com/example/demo/UserController.java", "line": 26},
+    {"category": "code", "cwe": "CWE-502", "file": "src/main/java/com/example/demo/UserController.java", "line": 32}
+  ],
+  "routes": ["GET /users", "POST /import"],
+  "entry_points": ["src/main/java/com/example/demo/DemoApplication.java"]
+}

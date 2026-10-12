@@ -1,0 +1,12 @@
+{
+  "fixture": "express_app",
+  "issues": [
+    {"category": "secret", "cwe": "CWE-798", "file": "server.ts", "line": 5},
+    {"category": "config", "cwe": "CWE-693", "file": "server.ts", "line": 6, "note": "no security header middleware"},
+    {"category": "config", "cwe": "CWE-942", "file": "server.ts", "line": 9},
+    {"category": "code", "cwe": "CWE-89", "file": "server.ts", "line": 13},
+    {"category": "code", "cwe": "CWE-79", "file": "server.ts", "line": 19}
+  ],
+  "routes": ["GET /users/:id", "GET /search", "POST /charge"],
+  "entry_points": ["server.ts"]
+}
