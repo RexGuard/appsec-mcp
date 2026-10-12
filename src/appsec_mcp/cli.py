@@ -15,9 +15,7 @@ def _setup_logging() -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        prog="appsec-mcp", description="Security checks for your code, over MCP."
-    )
+    parser = argparse.ArgumentParser(prog="appsec-mcp", description="Security checks for your code, over MCP.")
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     sub = parser.add_subparsers(dest="command")
     sub.add_parser("serve", help="Start the MCP server over stdio (the default).")

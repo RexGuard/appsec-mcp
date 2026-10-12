@@ -8,9 +8,7 @@ from pydantic import Field, model_validator
 
 from appsec_mcp.models.common import Id, RelPath, StrictModel
 
-NodeKind = Literal[
-    "component", "entry_point", "route", "data_store", "external_service", "secret", "dependency"
-]
+NodeKind = Literal["component", "entry_point", "route", "data_store", "external_service", "secret", "dependency"]
 EdgeKind = Literal["imports", "calls", "handles", "reads", "depends_on"]
 
 

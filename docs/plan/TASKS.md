@@ -27,7 +27,7 @@
   Done when: the developer has clicked through Findings, Map and Ledger; requested changes are applied or logged as issues; `docs/ui-review.md` records the decisions; the mock JSON shapes are frozen as the API contract.
 
 ## Phase 2: Storage and scan engine
-- [ ] T6: Implement SQLite storage with migrations and repositories
+- [x] T6: Implement SQLite storage with migrations and repositories
   Goal: A local DB at `~/.appsec-mcp/appsec.db` (overridable via the `APPSEC_MCP_HOME` env var) with every table from SPEC.md and one repository class per aggregate.
   Files: `src/appsec_mcp/storage/{db.py,migrations.py,project_repo.py,scan_repo.py,finding_repo.py,map_repo.py,patch_repo.py}`, `tests/storage/test_*.py`
   Done when: migrations are idempotent; CRUD works for every repository against a tmp-path DB; all SQL is parameterised (verified with a grep-based test); the indexes exist.

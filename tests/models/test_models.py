@@ -24,9 +24,7 @@ SCAN_RESPONSE = {
     "new": 2,
     "fixed": 1,
     "scanners_run": ["builtin", "gitleaks"],
-    "scanners_skipped": [
-        {"name": "semgrep", "reason": "not installed", "install_hint": "pipx install semgrep"}
-    ],
+    "scanners_skipped": [{"name": "semgrep", "reason": "not installed", "install_hint": "pipx install semgrep"}],
     "files_read": 12,
     "files_skipped": 3,
     "duration_s": 4.2,
