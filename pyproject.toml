@@ -1,0 +1,57 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "appsec-mcp"
+version = "0.1.0"
+description = "An MCP server that finds security problems in your code, explains them in plain language and maps what it read."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12"
+authors = [{ name = "RexGuard" }]
+keywords = ["mcp", "security", "sast", "semgrep", "gitleaks", "osv"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Security",
+]
+dependencies = [
+    "mcp>=2.3,<3",
+    "pydantic>=2.7,<3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "pytest-asyncio>=0.23",
+    "ruff>=0.6",
+]
+
+[project.scripts]
+appsec-mcp = "appsec_mcp.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/appsec_mcp"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "SIM", "RUF"]
+ignore = ["RUF001"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S603", "S607"]
+"tests/fixtures/**" = ["ALL"]
+
+[tool.ruff.format]
+exclude = ["tests/fixtures/**"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = ["scanners: needs the real Semgrep / gitleaks / OSV-Scanner binaries"]
