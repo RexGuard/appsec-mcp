@@ -2,9 +2,11 @@
 
 from pathlib import Path
 
+from appsec_mcp.analysis.chains import build_chains
 from appsec_mcp.errors import ErrorCode, NotFoundError
 from appsec_mcp.explain.templates import load_catalog, truncate_words
 from appsec_mcp.mapper.builder import summarize
+from appsec_mcp.models.chain import AttackChainList
 from appsec_mcp.models.finding import FindingDetail, FindingItem, FindingList
 from appsec_mcp.models.ledger import Ledger, LedgerFiles
 from appsec_mcp.models.scan import ScanList, ScannerRun, ScanSummary, SeverityCounts, SkippedScanner
@@ -39,6 +41,7 @@ def _item(row: FindingRow) -> FindingItem:
         status=row.status,  # type: ignore[arg-type]
         scanner=row.scanner,
         cwe=row.cwe,  # type: ignore[arg-type]
+        evidence_tier=row.evidence_tier,  # type: ignore[arg-type]
     )
 
 
@@ -108,12 +111,21 @@ class QueryService:
             snippet_redacted=row.snippet_redacted,
             patchable=row.patchable and row.status != "fixed",
             references=list(entry.references),
+            evidence_tier=row.evidence_tier,  # type: ignore[arg-type]
+            reported_severity=row.reported_severity,  # type: ignore[arg-type]
+            evidence=row.evidence,
         )
 
     def graph(self, scan_id: int) -> SystemGraph:
         """The full system map."""
         self.scan_row(scan_id)
         return self._repos.maps.load(scan_id)
+
+    def attack_chains(self, scan_id: int) -> AttackChainList:
+        """Attack paths that link entry points, findings and the assets they reach."""
+        graph = self.graph(scan_id)
+        chains = build_chains(graph, self._repos.findings.for_scan(scan_id))
+        return AttackChainList(total=len(chains), items=chains)
 
     def map_summary(self, scan_id: int) -> SystemSummary:
         """The system map as lists."""

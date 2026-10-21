@@ -11,6 +11,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
+from appsec_mcp.analysis.evidence_gate import apply_gate, gate_summary
 from appsec_mcp.errors import AppSecError, ErrorCode, ScannerError
 from appsec_mcp.mapper.builder import build_map
 from appsec_mcp.models.finding import NormalizedFinding
@@ -86,8 +87,12 @@ class ScanService:
             ledger = LedgerCollector().consume(walk(root, request.max_file_kb * _BYTES_PER_KB))
             self._repos.scans.add_files(scan_id, ledger.entries)
             outputs = self._run_adapters(root, ledger.sources, request.scanners)
-            new, fixed_rows = self._diff(project.id, scan_id, outputs.findings)
-            graph = build_map(project.name, ledger.sources, outputs.findings)
+            suppressed_fps = self._repos.suppressions.fingerprints(project.id)
+            kept = [f for f in outputs.findings if f.fingerprint not in suppressed_fps]
+            suppressed = len(outputs.findings) - len(kept)
+            new, fixed_rows = self._diff(project.id, scan_id, kept, suppressed_fps)
+            graph = build_map(project.name, ledger.sources, kept)
+            outputs.findings = apply_gate(kept, graph)
             self._repos.findings.add_many(scan_id, [*outputs.findings, *fixed_rows])
             self._repos.scans.add_rules(scan_id, outputs.rules)
             self._repos.maps.save(scan_id, graph)
@@ -109,9 +114,12 @@ class ScanService:
             files_read=ledger.read_count,
             files_skipped=ledger.skipped_count,
             duration_s=round(time.perf_counter() - started, 3),
+            suppressed=suppressed,
+            demoted=sum(1 for f in outputs.findings if f.reported_severity is not None),
         )
         summary = result.model_dump(exclude={"scan_id", "project", "status", "score"})
         summary["scanner_runs"] = [r.model_dump() for r in outputs.runs]
+        summary["evidence"] = gate_summary(outputs.findings)
         self._repos.scans.finish(scan_id, result.status, result.score, summary)
         logger.info("Scan %d of %s finished: score %d", scan_id, root, result.score)
         return result
@@ -143,9 +151,16 @@ class ScanService:
         return outputs
 
     def _diff(
-        self, project_id: int, scan_id: int, findings: list[NormalizedFinding]
+        self,
+        project_id: int,
+        scan_id: int,
+        findings: list[NormalizedFinding],
+        suppressed: set[str],
     ) -> tuple[int, list[NormalizedFinding]]:
-        """Mark findings new/existing and return (new count, findings now fixed)."""
+        """Mark findings new/existing and return (new count, findings now fixed).
+
+        A finding the user marked as a false positive is hidden, not fixed.
+        """
         previous = self._repos.scans.previous_completed(project_id, scan_id)
         if previous is None:
             return len(findings), []
@@ -157,7 +172,9 @@ class ScanService:
             status = "existing" if finding.fingerprint in old else "new"
             new += status == "new"
             findings[index] = finding.model_copy(update={"status": status})
-        fixed = [_as_fixed(row) for fp, row in old.items() if fp not in current]
+        fixed = [
+            _as_fixed(row) for fp, row in old.items() if fp not in current and fp not in suppressed
+        ]
         return new, fixed
 
 
@@ -209,4 +226,7 @@ def _as_fixed(row: FindingRow) -> NormalizedFinding:
         fix_hint=row.fix_hint,
         fix_kind=None,
         status="fixed",
+        evidence_tier=row.evidence_tier,  # type: ignore[arg-type]
+        reported_severity=row.reported_severity,  # type: ignore[arg-type]
+        evidence=row.evidence,
     )

@@ -2,7 +2,14 @@
 
 from pydantic import Field
 
-from appsec_mcp.models.base import FindingStatus, PositiveId, ScannerName, Severity, StrictModel
+from appsec_mcp.models.base import (
+    EvidenceTier,
+    FindingStatus,
+    PositiveId,
+    ScannerName,
+    Severity,
+    StrictModel,
+)
 
 
 class RawFinding(StrictModel):
@@ -37,6 +44,10 @@ class NormalizedFinding(StrictModel):
     fix_hint: str
     fix_kind: str | None
     status: FindingStatus = "new"
+    sources: list[ScannerName] = Field(default_factory=list)
+    evidence_tier: EvidenceTier = "pattern"
+    reported_severity: Severity | None = None
+    evidence: list[str] = Field(default_factory=list)
 
 
 class FindingItem(StrictModel):
@@ -52,6 +63,7 @@ class FindingItem(StrictModel):
     status: FindingStatus
     scanner: ScannerName
     cwe: str | None
+    evidence_tier: EvidenceTier = "pattern"
 
 
 class FindingList(StrictModel):
@@ -78,3 +90,8 @@ class FindingDetail(StrictModel):
     snippet_redacted: str
     patchable: bool
     references: list[str]
+    evidence_tier: EvidenceTier = "pattern"
+    reported_severity: Severity | None = Field(
+        default=None, description="The scanner's severity, when the evidence gate changed it."
+    )
+    evidence: list[str] = Field(default_factory=list)

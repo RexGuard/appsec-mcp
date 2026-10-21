@@ -28,6 +28,10 @@ EXPECTED_TOOLS = {
     "apply_patch",
     "revert_patch",
     "check_website",
+    "get_attack_chains",
+    "mark_false_positive",
+    "unmark_false_positive",
+    "list_false_positives",
 }
 
 

@@ -1,7 +1,8 @@
 """Findings: stored per scan, with the status relative to the previous scan."""
 
+import json
 from collections.abc import Iterable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from appsec_mcp.models.base import SEVERITY_RANK
 from appsec_mcp.models.finding import NormalizedFinding
@@ -29,11 +30,15 @@ class FindingRow:
     fix_kind: str | None
     patchable: bool
     status: str
+    evidence_tier: str = "pattern"
+    reported_severity: str | None = None
+    evidence: list[str] = field(default_factory=list)
 
 
 _COLUMNS = (
     "id, scan_id, fingerprint, scanner, rule_id, severity, cwe, rel_path, line_start, line_end, "
-    "snippet_redacted, title, plain_explanation, fix_hint, fix_kind, patchable, status"
+    "snippet_redacted, title, plain_explanation, fix_hint, fix_kind, patchable, status, "
+    "evidence_tier, reported_severity, evidence_json"
 )
 _SEVERITY_ORDER_SQL = (
     "CASE severity WHEN 'critical' THEN 4 WHEN 'high' THEN 3 WHEN 'medium' THEN 2 "
@@ -48,6 +53,7 @@ def _to_row(row: object) -> FindingRow:
     data["patchable"] = bool(data["patchable"])
     data["snippet_redacted"] = data["snippet_redacted"] or ""
     data["fix_hint"] = data["fix_hint"] or ""
+    data["evidence"] = json.loads(data.pop("evidence_json") or "[]")
     return FindingRow(**data)
 
 
@@ -77,6 +83,9 @@ class FindingRepo:
                 f.fix_kind,
                 int(f.fix_kind is not None),
                 f.status,
+                f.evidence_tier,
+                f.reported_severity,
+                json.dumps(f.evidence),
             )
             for f in findings
         ]
@@ -84,8 +93,8 @@ class FindingRepo:
             conn.executemany(
                 "INSERT INTO findings (scan_id, fingerprint, scanner, rule_id, severity, cwe, "
                 "rel_path, line_start, line_end, snippet_redacted, title, plain_explanation, "
-                "fix_hint, fix_kind, patchable, status) "
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "fix_hint, fix_kind, patchable, status, evidence_tier, reported_severity, "
+                "evidence_json) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 rows,
             )
         return len(rows)

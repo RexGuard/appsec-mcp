@@ -29,7 +29,7 @@ _ROOT_LABEL = "(project root)"
 _SECRET_CWES = frozenset({"CWE-798", "CWE-538"})
 
 
-def _component_of(rel_path: str) -> str:
+def component_of(rel_path: str) -> str:
     parent = PurePosixPath(rel_path).parent.as_posix()
     return _ROOT_LABEL if parent == "." else parent
 
@@ -72,7 +72,7 @@ def build_map(
     for source in sources:
         extractor = extractor_for(source)
         facts = extractor(source) if extractor else FileFacts()
-        component = _component_of(source.rel_path)
+        component = component_of(source.rel_path)
         if facts.is_empty() and source.language not in SOURCE_LANGUAGES:
             continue
         comp_id = graph.node(
@@ -121,7 +121,7 @@ def _add_secrets(graph: _GraphBuilder, findings: Sequence[NormalizedFinding]) ->
             label = f"{finding.rel_path}:{finding.line_start or 1}"
             secret_id = graph.node("secret", label, finding.rel_path, {"title": finding.title})
             comp_id = graph.node(
-                "component", _component_of(finding.rel_path), _component_of(finding.rel_path)
+                "component", component_of(finding.rel_path), component_of(finding.rel_path)
             )
             graph.edge(comp_id, secret_id, "reads")
 
@@ -129,7 +129,7 @@ def _add_secrets(graph: _GraphBuilder, findings: Sequence[NormalizedFinding]) ->
 def _attach_counts(graph: _GraphBuilder, findings: Sequence[NormalizedFinding]) -> None:
     open_findings = [f for f in findings if f.status != "fixed" and f.rel_path]
     by_file = Counter(f.rel_path for f in open_findings)
-    by_component = Counter(_component_of(f.rel_path or "") for f in open_findings)
+    by_component = Counter(component_of(f.rel_path or "") for f in open_findings)
     by_secret = Counter(
         f"{f.rel_path}:{f.line_start or 1}" for f in open_findings if f.cwe in _SECRET_CWES
     )

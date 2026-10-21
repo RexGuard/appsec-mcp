@@ -13,6 +13,8 @@ from appsec_mcp import __version__
 from appsec_mcp.context import AppContext
 from appsec_mcp.errors import AppSecError
 from appsec_mcp.models.base import ScannerName, Severity
+from appsec_mcp.models.chain import AttackChainList
+from appsec_mcp.models.feedback import FeedbackResult, SuppressionList
 from appsec_mcp.models.finding import FindingDetail, FindingList
 from appsec_mcp.models.ledger import Ledger
 from appsec_mcp.models.patch import PatchApplied, PatchProposal, PatchReverted, RecipeList
@@ -33,7 +35,10 @@ AppSec MCP finds security problems in a local project and explains them in plain
 Typical flow: scan_project(path) -> get_findings(scan_id) -> explain_finding(id) ->
 propose_patch(id) -> show the diff to the user -> apply_patch(token) only after the user
 approves -> scan_project again to confirm it is fixed. get_system_map and get_audit_ledger show
-what the app is made of and exactly what was read. Never apply a patch without the user's OK.
+what the app is made of and exactly what was read. get_attack_chains links findings into attack
+paths. Severity is set by an evidence gate: each finding has an evidence tier, and a bare pattern
+match is never ranked critical. If the user says a finding is wrong, call mark_false_positive.
+Never apply a patch without the user's OK.
 """
 
 
@@ -113,6 +118,36 @@ def build_server(ctx: AppContext) -> MCPServer:
         """Show exactly what the scan read (with hashes), what it skipped and why, and every rule
         and scanner it ran."""
         return _call(lambda: ctx.queries.ledger(scan_id, section, limit, offset))
+
+    @server.tool()
+    def get_attack_chains(scan_id: Id) -> AttackChainList:
+        """Show attack paths: how outside input or a leaked key reaches a weakness, and what it
+        then reaches (a database, a paid API, users' browsers). Chains built only on unproven
+        findings are labelled 'hypothesis' and capped at medium."""
+        return _call(lambda: ctx.queries.attack_chains(scan_id))
+
+    @server.tool()
+    def mark_false_positive(
+        finding_id: Id,
+        reason: Annotated[
+            str, Field(min_length=3, max_length=500, description="Why the finding is wrong.")
+        ],
+    ) -> FeedbackResult:
+        """Record that a finding is a false positive, so later scans of this project hide it.
+        Only call this when the user says the finding is wrong."""
+        return _call(lambda: ctx.feedback.mark(finding_id, reason))
+
+    @server.tool()
+    def unmark_false_positive(finding_id: Id) -> FeedbackResult:
+        """Undo mark_false_positive: the finding is reported again on the next scan."""
+        return _call(lambda: ctx.feedback.unmark(finding_id))
+
+    @server.tool()
+    def list_false_positives(
+        project_path: Annotated[str, Field(min_length=1, max_length=4096)],
+    ) -> SuppressionList:
+        """List the findings the user marked as false positives for a project folder."""
+        return _call(lambda: ctx.feedback.list_for(project_path))
 
     @server.tool()
     def list_scans(project_path: str | None = None, limit: Limit = 20) -> ScanList:

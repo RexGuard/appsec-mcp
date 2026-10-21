@@ -60,6 +60,12 @@ class ScanResult(StrictModel):
     files_read: int = Field(ge=0)
     files_skipped: int = Field(ge=0)
     duration_s: float = Field(ge=0)
+    suppressed: int = Field(
+        default=0, ge=0, description="Findings hidden because you marked them false positives."
+    )
+    demoted: int = Field(
+        default=0, ge=0, description="Findings the evidence gate ranked lower than the scanner."
+    )
 
 
 class ScanSummary(StrictModel):

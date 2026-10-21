@@ -10,6 +10,7 @@ from appsec_mcp.scanners.builtin import BuiltinScanner
 from appsec_mcp.scanners.gitleaks import GitleaksScanner
 from appsec_mcp.scanners.osv import OsvScanner
 from appsec_mcp.scanners.semgrep import SemgrepScanner
+from appsec_mcp.services.feedback_service import FeedbackService
 from appsec_mcp.services.patch_service import PatchService
 from appsec_mcp.services.query_service import QueryService
 from appsec_mcp.services.repositories import Repositories
@@ -33,6 +34,7 @@ class AppContext:
     queries: QueryService
     patches: PatchService
     web: WebCheckService
+    feedback: FeedbackService
 
 
 def build_context(
@@ -50,4 +52,5 @@ def build_context(
         queries=queries,
         patches=PatchService(repos, queries, settings.backups_dir),
         web=WebCheckService(),
+        feedback=FeedbackService(repos, queries),
     )

@@ -14,6 +14,11 @@ locally: your code never leaves your machine.
   - config: debug mode, CORS `*`, missing security headers, missing CSRF protection
   - vulnerable dependencies (with OSV-Scanner installed)
 - **Maps your app**: entry points, routes, data stores, external services, secrets, dependencies
+- **Ranks by evidence, not guesses**: an evidence gate gives every finding a tier (pattern,
+  reachable, corroborated, confirmed) and never ranks a lone pattern match as critical
+- **Links findings into attack chains**: e.g. route → SQL injection → MySQL, or leaked Stripe key →
+  Stripe API
+- **Learns from you**: mark a finding as a false positive and later scans hide it
 - **Shows its work**: an audit ledger lists every file read (with SHA-256), every file skipped and
   why, and every rule and scanner that ran
 - **Fixes, with your OK**: proposes a diff, applies it only with the proposal token, backs up
@@ -46,6 +51,8 @@ scanners (Semgrep, gitleaks, OSV-Scanner) and other MCP clients.
 | `explain_finding` | What it is, why it matters, how to fix it |
 | `get_system_map` | What the app is made of, with the risky spots |
 | `get_audit_ledger` | Exactly what was read, skipped and checked |
+| `get_attack_chains` | Attack paths from outside input or a leaked key to what it reaches |
+| `mark_false_positive` / `unmark_false_positive` / `list_false_positives` | Hide findings you rejected from later scans |
 | `list_scans` | Scan history and scores |
 | `list_recipes` / `propose_hardening` | "Add a security layer" recipes |
 | `propose_patch` | A fix as a diff; writes nothing |
@@ -71,6 +78,7 @@ git hook). `view` opens the local viewer with the Findings, Map and Ledger tabs.
 - [MCP client setup](docs/clients.md)
 - [What it reads (the audit ledger)](docs/what-it-reads.md)
 - [Patching and hardening](docs/patching.md)
+- [Evidence tiers, attack chains and false positives](docs/evidence-and-chains.md)
 - [Contributing: rules, explanations and recipes](CONTRIBUTING.md)
 
 ## Limits

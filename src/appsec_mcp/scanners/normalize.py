@@ -25,14 +25,20 @@ def _dedupe_key(raw: RawFinding) -> tuple[str, int, str]:
 
 
 def normalize(raws: Iterable[RawFinding]) -> list[NormalizedFinding]:
-    """Deduplicate by (file, line, CWE), keeping the most severe; O(n) over findings."""
+    """Deduplicate by (file, line, CWE), keeping the most severe; O(n) over findings.
+
+    Every scanner that reported the same issue is kept in `sources`, so the evidence gate can
+    tell a single pattern match from independent agreement.
+    """
     best: dict[tuple[str, int, str], RawFinding] = {}
+    sources: dict[tuple[str, int, str], set[str]] = {}
     for raw in raws:
         key = _dedupe_key(raw)
+        sources.setdefault(key, set()).add(raw.scanner)
         current = best.get(key)
         if current is None or _better(raw, current):
             best[key] = raw
-    return [_to_normalized(raw) for raw in best.values()]
+    return [_to_normalized(raw, sorted(sources[key])) for key, raw in best.items()]
 
 
 def _better(candidate: RawFinding, current: RawFinding) -> bool:
@@ -41,7 +47,7 @@ def _better(candidate: RawFinding, current: RawFinding) -> bool:
     return candidate.fix_kind is not None and current.fix_kind is None
 
 
-def _to_normalized(raw: RawFinding) -> NormalizedFinding:
+def _to_normalized(raw: RawFinding, sources: list[str]) -> NormalizedFinding:
     snippet = redact_text(raw.snippet)[:_MAX_SNIPPET_CHARS]
     redacted_raw = raw.model_copy(update={"snippet": snippet, "message": redact_text(raw.message)})
     explanation = explain(redacted_raw)
@@ -59,4 +65,5 @@ def _to_normalized(raw: RawFinding) -> NormalizedFinding:
         plain_explanation=explanation.plain,
         fix_hint=explanation.how_to_fix,
         fix_kind=raw.fix_kind,
+        sources=sources,  # type: ignore[arg-type]
     )

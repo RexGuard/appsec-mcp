@@ -101,6 +101,24 @@ _MIGRATIONS: list[str] = [
     CREATE INDEX idx_map_edges_scan ON map_edges(scan_id);
     CREATE INDEX idx_scans_project ON scans(project_id);
     """,
+    """
+    ALTER TABLE findings ADD COLUMN evidence_tier TEXT NOT NULL DEFAULT 'pattern'
+        CHECK (evidence_tier IN ('pattern','reachable','corroborated','confirmed'));
+    ALTER TABLE findings ADD COLUMN reported_severity TEXT
+        CHECK (reported_severity IN ('critical','high','medium','low','info'));
+    ALTER TABLE findings ADD COLUMN evidence_json TEXT;
+    CREATE TABLE suppressions (
+        id INTEGER PRIMARY KEY,
+        project_id INTEGER NOT NULL REFERENCES projects(id),
+        fingerprint TEXT NOT NULL,
+        title TEXT NOT NULL,
+        rel_path TEXT,
+        reason TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        UNIQUE (project_id, fingerprint)
+    );
+    CREATE INDEX idx_suppressions_project ON suppressions(project_id);
+    """,
 ]
 
 
